@@ -79,6 +79,8 @@ public class SaveCollectionJSON extends SaveCollection {
 			
 			Salida = processCollection(Salvar);
 			
+			System.out.println("ho");
+			
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(Salida);
@@ -134,7 +136,7 @@ public class SaveCollectionJSON extends SaveCollection {
 			CompleteDocuments documento = salvar.getEstructuras().get(i);
 			JSONObject DocumentJ=new JSONObject();
 			DocumentJ.put(JSONNAMES.DOCUMENTS_ID, documento.getClavilenoid());
-			DocumentJ.put(JSONNAMES.DOCUMENTS_DESC,documento.getDescription());
+			DocumentJ.put(JSONNAMES.DOCUMENTS_DESC,documento.getDescriptionText());
 			DocumentJ.put(JSONNAMES.DOCUMENTS_ICON,documento.getIcon());
 			insertdocumentViewVal(DocumentJ,documento);
 			insertdocumentSons(DocumentJ,documento);
