@@ -1,0 +1,297 @@
+{
+  "grammars": [
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 0
+        },
+        {
+          "default": "1desc",
+          "view": "1padre",
+          "name": "1name",
+          "id": 0
+        },
+        {
+          "default": "2desc",
+          "view": "2padre",
+          "name": "2name",
+          "id": 0
+        },
+        {
+          "default": "3desc",
+          "view": "3padre",
+          "name": "3name",
+          "id": 0
+        },
+        {
+          "default": "4desc",
+          "view": "4padre",
+          "name": "4name",
+          "id": 0
+        }
+      ],
+      "sons": [],
+      "description": "0desc",
+      "id": 0,
+      "nombre": "0name"
+    },
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 1
+        },
+        {
+          "default": "1desc",
+          "view": "1padre",
+          "name": "1name",
+          "id": 1
+        },
+        {
+          "default": "2desc",
+          "view": "2padre",
+          "name": "2name",
+          "id": 1
+        },
+        {
+          "default": "3desc",
+          "view": "3padre",
+          "name": "3name",
+          "id": 1
+        },
+        {
+          "default": "4desc",
+          "view": "4padre",
+          "name": "4name",
+          "id": 1
+        },
+        {
+          "default": "5desc",
+          "view": "5padre",
+          "name": "5name",
+          "id": 1
+        }
+      ],
+      "sons": [],
+      "description": "1desc",
+      "id": 1,
+      "nombre": "1name"
+    },
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 2
+        },
+        {
+          "default": "1desc",
+          "view": "1padre",
+          "name": "1name",
+          "id": 2
+        }
+      ],
+      "sons": [],
+      "description": "2desc",
+      "id": 2,
+      "nombre": "2name"
+    },
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 3
+        },
+        {
+          "default": "1desc",
+          "view": "1padre",
+          "name": "1name",
+          "id": 3
+        },
+        {
+          "default": "2desc",
+          "view": "2padre",
+          "name": "2name",
+          "id": 3
+        },
+        {
+          "default": "3desc",
+          "view": "3padre",
+          "name": "3name",
+          "id": 3
+        },
+        {
+          "default": "4desc",
+          "view": "4padre",
+          "name": "4name",
+          "id": 3
+        }
+      ],
+      "sons": [],
+      "description": "3desc",
+      "id": 3,
+      "nombre": "3name"
+    },
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 4
+        },
+        {
+          "default": "1desc",
+          "view": "1padre",
+          "name": "1name",
+          "id": 4
+        }
+      ],
+      "sons": [],
+      "description": "4desc",
+      "id": 4,
+      "nombre": "4name"
+    },
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 5
+        },
+        {
+          "default": "1desc",
+          "view": "1padre",
+          "name": "1name",
+          "id": 5
+        },
+        {
+          "default": "2desc",
+          "view": "2padre",
+          "name": "2name",
+          "id": 5
+        },
+        {
+          "default": "3desc",
+          "view": "3padre",
+          "name": "3name",
+          "id": 5
+        },
+        {
+          "default": "4desc",
+          "view": "4padre",
+          "name": "4name",
+          "id": 5
+        },
+        {
+          "default": "5desc",
+          "view": "5padre",
+          "name": "5name",
+          "id": 5
+        },
+        {
+          "default": "6desc",
+          "view": "6padre",
+          "name": "6name",
+          "id": 5
+        },
+        {
+          "default": "7desc",
+          "view": "7padre",
+          "name": "7name",
+          "id": 5
+        }
+      ],
+      "sons": [],
+      "description": "5desc",
+      "id": 5,
+      "nombre": "5name"
+    }
+  ],
+  "name": "nombre coleccion",
+  "description": "descripcion",
+  "resources": [
+    {
+      "path": "0path",
+      "id": 0
+    },
+    {
+      "path": "1path",
+      "id": 1
+    },
+    {
+      "path": "2path",
+      "id": 2
+    },
+    {
+      "path": "3path",
+      "id": 3
+    },
+    {
+      "path": "4path",
+      "id": 4
+    },
+    {
+      "path": "5path",
+      "id": 5
+    },
+    {
+      "path": "6path",
+      "id": 6
+    },
+    {
+      "path": "7path",
+      "id": 7
+    },
+    {
+      "path": "8path",
+      "id": 8
+    },
+    {
+      "path": "9path",
+      "id": 9
+    },
+    {
+      "path": "10path",
+      "id": 10
+    },
+    {
+      "path": "11path",
+      "id": 11
+    },
+    {
+      "path": "12path",
+      "id": 12
+    },
+    {
+      "path": "13path",
+      "id": 13
+    },
+    {
+      "path": "14path",
+      "id": 14
+    },
+    {
+      "path": "15path",
+      "id": 15
+    },
+    {
+      "path": "16path",
+      "id": 16
+    },
+    {
+      "path": "17path",
+      "id": 17
+    }
+  ],
+  "id": 1
+}

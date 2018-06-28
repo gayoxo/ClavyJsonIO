@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,9 +24,20 @@ import fdi.ucm.server.modelComplete.CompleteImportRuntimeException;
 import fdi.ucm.server.modelComplete.SaveCollection;
 import fdi.ucm.server.modelComplete.collection.CompleteCollection;
 import fdi.ucm.server.modelComplete.collection.CompleteLogAndUpdates;
+import fdi.ucm.server.modelComplete.collection.document.CompleteDocuments;
+import fdi.ucm.server.modelComplete.collection.document.CompleteElement;
 import fdi.ucm.server.modelComplete.collection.document.CompleteFile;
+import fdi.ucm.server.modelComplete.collection.document.CompleteLinkElement;
+import fdi.ucm.server.modelComplete.collection.document.CompleteOperationalValue;
+import fdi.ucm.server.modelComplete.collection.document.CompleteResourceElementFile;
+import fdi.ucm.server.modelComplete.collection.document.CompleteResourceElementURL;
+import fdi.ucm.server.modelComplete.collection.document.CompleteTextElement;
+import fdi.ucm.server.modelComplete.collection.grammar.CompleteElementType;
 import fdi.ucm.server.modelComplete.collection.grammar.CompleteGrammar;
+import fdi.ucm.server.modelComplete.collection.grammar.CompleteLinkElementType;
 import fdi.ucm.server.modelComplete.collection.grammar.CompleteOperationalValueType;
+import fdi.ucm.server.modelComplete.collection.grammar.CompleteResourceElementType;
+import fdi.ucm.server.modelComplete.collection.grammar.CompleteTextElementType;
 
 /**
  * Clase que impementa el plugin de oda para Localhost
@@ -43,6 +51,7 @@ public class SaveCollectionJSON extends SaveCollection {
 	private String Path;
 	private String FileIO;
 	private String SOURCE_FOLDER = ""; // SourceFolder path
+	private String Salida;
 
 	
 	/**
@@ -68,13 +77,14 @@ public class SaveCollectionJSON extends SaveCollection {
 			Dir.mkdirs();
 			FileIO = Path+System.currentTimeMillis()+".json";
 			
-			String Salida = processCollection(Salvar);
+			Salida = processCollection(Salvar);
 			
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(Salida);
 			String prettyJsonString = gson.toJson(je);
-			System.out.println(prettyJsonString);
+			
+			Salida=prettyJsonString;
 //			HTMLprocess oda= new HTMLprocess(ListaDeDocumentos,Salvar,SOURCE_FOLDER,CL,TextoIn);
 //			
 //			
@@ -84,7 +94,7 @@ public class SaveCollectionJSON extends SaveCollection {
 				CL.getLogLines().add("Descarga el zip");
 
 				FileWriter fw=new FileWriter(FileIO);
-				fw.write(prettyJsonString);
+				fw.write(Salida);
 				fw.close(); 
 			return CL;
 
@@ -109,11 +119,84 @@ public class SaveCollectionJSON extends SaveCollection {
 			Col.put(JSONNAMES.COLLECTION_DESC, salvar.getDescription());
 			insertSections(Col,salvar);
 			insertGrammars(Col,salvar);
+			insertDocuments(Col,salvar);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return Col.toString();
+	}
+
+	private void insertDocuments(JSONObject col, CompleteCollection salvar) throws JSONException {
+		JSONArray docsL=new JSONArray();
+		col.put(JSONNAMES.COLLECTION_DOCUMENTS, docsL);
+		for (int i = 0; i < salvar.getEstructuras().size(); i++) {
+			CompleteDocuments documento = salvar.getEstructuras().get(i);
+			JSONObject DocumentJ=new JSONObject();
+			DocumentJ.put(JSONNAMES.DOCUMENTS_ID, documento.getClavilenoid());
+			DocumentJ.put(JSONNAMES.DOCUMENTS_DESC,documento.getDescription());
+			DocumentJ.put(JSONNAMES.DOCUMENTS_ICON,documento.getIcon());
+			insertdocumentViewVal(DocumentJ,documento);
+			insertdocumentSons(DocumentJ,documento);
+			docsL.put(DocumentJ);
+		}
+		
+	}
+
+	private void insertdocumentSons(JSONObject documentJ, CompleteDocuments documento) throws JSONException {
+		JSONArray sons=new JSONArray();
+		documentJ.put(JSONNAMES.DOCUMENT_ELEMENTS, sons);
+		for (int i = 0; i < documento.getDescription().size(); i++) {
+			CompleteElement elev = documento.getDescription().get(i);
+			JSONObject elemnTj=new JSONObject();
+			elemnTj.put(JSONNAMES.ELEMENT_ID, elev.getClavilenoid());
+			if (elev.getHastype()!=null)
+				elemnTj.put(JSONNAMES.ELEMENT_VALUE_TYPE_ID,elev.getHastype().getClavilenoid());
+			
+			JSONArray views=new JSONArray();
+			elemnTj.put(JSONNAMES.ELEMENT_VIEW, views);
+			for (int j = 0; j < elev.getShows().size(); i++) {
+				CompleteOperationalValue GOv = elev.getShows().get(j);
+				JSONObject Operational=new JSONObject();
+				Operational.put(JSONNAMES.VIEW_VALUE_ID, GOv.getClavilenoid());
+				if (GOv.getType()!=null)
+					Operational.put(JSONNAMES.VIEW_VALUE_TYPE_ID,GOv.getType().getClavilenoid());
+				Operational.put(JSONNAMES.VIEW_VALUE_VALUE,GOv.getValue());
+				views.put(Operational);
+			}
+			
+			
+			if (elev instanceof CompleteTextElement)
+				elemnTj.put(JSONNAMES.ELEMENT_VALUE, ((CompleteTextElement)elev).getValue());
+			
+			if (elev instanceof CompleteLinkElement&&((CompleteLinkElement)elev).getValue()!=null)
+				elemnTj.put(JSONNAMES.ELEMENT_VALUE, ((CompleteLinkElement)elev).getValue().getClavilenoid());
+			
+			if (elev instanceof CompleteResourceElementFile&&((CompleteResourceElementFile)elev).getValue()!=null)
+				elemnTj.put(JSONNAMES.ELEMENT_VALUE, ((CompleteResourceElementFile)elev).getValue().getClavilenoid());
+			
+			if (elev instanceof CompleteResourceElementURL&&((CompleteResourceElementURL)elev).getValue()!=null)
+				elemnTj.put(JSONNAMES.ELEMENT_VALUE, ((CompleteResourceElementURL)elev).getValue());
+			
+			
+			sons.put(elemnTj);
+		}
+		
+	}
+
+	private void insertdocumentViewVal(JSONObject documentJ, CompleteDocuments documento) throws JSONException {
+		JSONArray views=new JSONArray();
+		documentJ.put(JSONNAMES.DOCUMENT_VIEW, views);
+		for (int i = 0; i < documento.getViewsValues().size(); i++) {
+			CompleteOperationalValue GOv = documento.getViewsValues().get(i);
+			JSONObject Operational=new JSONObject();
+			Operational.put(JSONNAMES.VIEW_VALUE_ID, GOv.getClavilenoid());
+			if (GOv.getType()!=null)
+				Operational.put(JSONNAMES.VIEW_VALUE_TYPE_ID,GOv.getType().getClavilenoid());
+			Operational.put(JSONNAMES.VIEW_VALUE_VALUE,GOv.getValue());
+			views.put(Operational);
+		}
+		
 	}
 
 	private void insertGrammars(JSONObject col, CompleteCollection salvar) throws JSONException {
@@ -135,7 +218,61 @@ public class SaveCollectionJSON extends SaveCollection {
 	private void insertgrammarSons(JSONObject grammarJ, CompleteGrammar grammar) throws JSONException {
 		JSONArray Sons=new JSONArray();
 		grammarJ.put(JSONNAMES.GRAMMARS_SONS, Sons);
-		//TODO
+		for (int i = 0; i < grammar.getSons().size(); i++) {
+			CompleteElementType GOv = grammar.getSons().get(i);
+			addson(GOv,Sons);
+
+		}
+	}
+
+	private void addson(CompleteElementType gOv, JSONArray sons) throws JSONException {
+		JSONObject son=new JSONObject();
+		son.put(JSONNAMES.STRUCTURE_ID, gOv.getClavilenoid());
+		son.put(JSONNAMES.STRUCTURE_NAME,gOv.getName());
+		if (gOv.getBFather()!=null)
+			son.put(JSONNAMES.STRUCTURE_B_FATHER,gOv.getBFather().getClavilenoid());
+		if (gOv.getBSon()!=null)
+			son.put(JSONNAMES.STRUCTURE_B_SON,gOv.getBSon().getClavilenoid());
+		if (gOv.getClassOfIterator()!=null)
+			son.put(JSONNAMES.STRUCTURE_COI,gOv.getClassOfIterator().getClavilenoid());
+		son.put(JSONNAMES.STRUCTURE_BROWSEABLE,gOv.isBrowseable());
+		son.put(JSONNAMES.STRUCTURE_MULTIVALUED,gOv.isMultivalued());
+		son.put(JSONNAMES.STRUCTURE_SELECTABLE,gOv.isSelectable());
+		son.put(JSONNAMES.STRUCTURE_BEFILTER,gOv.isBeFilter());
+
+		JSONArray Sonsint=new JSONArray();
+		son.put(JSONNAMES.STRUCTURE_SONS, Sonsint);
+		for (int i = 0; i < gOv.getSons().size(); i++) {
+			CompleteElementType GOv = gOv.getSons().get(i);
+			addson(GOv,Sonsint);
+
+		}
+		
+		JSONArray views=new JSONArray();
+		son.put(JSONNAMES.STRUCTURE_VIEW, views);
+		for (int i = 0; i < gOv.getShows().size(); i++) {
+			CompleteOperationalValueType GOv = gOv.getShows().get(i);
+			JSONObject Operational=new JSONObject();
+			Operational.put(JSONNAMES.VIEW_TYPE_ID, GOv.getClavilenoid());
+			Operational.put(JSONNAMES.VIEW_TYPE_NAME,GOv.getName());
+			Operational.put(JSONNAMES.VIEW_TYPE_DEF,GOv.getDefault());
+			Operational.put(JSONNAMES.VIEW_TYPE_VIEW,GOv.getView());
+			views.put(Operational);
+		}
+		
+		if (gOv instanceof CompleteTextElementType)
+			son.put(JSONNAMES.STRUCTURE_TYPE, JSONNAMES.STRUCTURE_TYPE_T);
+		else
+		if (gOv instanceof CompleteLinkElementType)
+			son.put(JSONNAMES.STRUCTURE_TYPE, JSONNAMES.STRUCTURE_TYPE_L);
+		else
+		if (gOv instanceof CompleteResourceElementType)
+			son.put(JSONNAMES.STRUCTURE_TYPE, JSONNAMES.STRUCTURE_TYPE_R);
+		else
+			son.put(JSONNAMES.STRUCTURE_TYPE, JSONNAMES.STRUCTURE_TYPE_X);
+		
+		sons.put(son);
+		
 	}
 
 	private void insertgrammarView(JSONObject grammarJ, CompleteGrammar grammar) throws JSONException {
@@ -144,10 +281,10 @@ public class SaveCollectionJSON extends SaveCollection {
 		for (int i = 0; i < grammar.getViews().size(); i++) {
 			CompleteOperationalValueType GOv = grammar.getViews().get(i);
 			JSONObject Operational=new JSONObject();
-			Operational.put(JSONNAMES.GRAMMARS_VIEW_ID, GOv.getClavilenoid());
-			Operational.put(JSONNAMES.GRAMMARS_VIEW_NAME,GOv.getName());
-			Operational.put(JSONNAMES.GRAMMARS_VIEW_DEF,GOv.getDefault());
-			Operational.put(JSONNAMES.GRAMMARS_VIEW_VIEW,GOv.getView());
+			Operational.put(JSONNAMES.VIEW_TYPE_ID, GOv.getClavilenoid());
+			Operational.put(JSONNAMES.VIEW_TYPE_NAME,GOv.getName());
+			Operational.put(JSONNAMES.VIEW_TYPE_DEF,GOv.getDefault());
+			Operational.put(JSONNAMES.VIEW_TYPE_VIEW,GOv.getView());
 			views.put(Operational);
 		}
 	}
@@ -217,7 +354,6 @@ public class SaveCollectionJSON extends SaveCollection {
 //				Long N=Long.parseLong(string2);
 //				Salida.add(N);
 //			} catch (Exception e) {
-//				// TODO: handle exception
 //			}
 //		}
 //		return Salida;
@@ -245,12 +381,17 @@ public class SaveCollectionJSON extends SaveCollection {
 	}
 
 	
- 
+ public String getSalida() {
+	return Salida;
+}
 	
 	public static void main(String[] args) {
 		SaveCollectionJSON SV=new SaveCollectionJSON();
 		CompleteCollection CC=CreateCollectionBase();
 		SV.processCollecccion(CC, "");
+		System.out.println(SV.getSalida());
+
+		
 	}
 
 	private static CompleteCollection CreateCollectionBase() {
@@ -261,6 +402,8 @@ public class SaveCollectionJSON extends SaveCollection {
 			C.getSectionValues().add(new CompleteFile(new Long(i),"File"+ i+"path", C));
 		
 		List<CompleteFile> Files=new LinkedList<>(C.getSectionValues());
+		List<CompleteElementType> Elements=new LinkedList<CompleteElementType>();
+
 		
 		int n2 = (new Random()).nextInt(20);
 		for (int i = 0; i < n2; i++) 
@@ -269,15 +412,52 @@ public class SaveCollectionJSON extends SaveCollection {
 
 			int n3 = (new Random()).nextInt(10);
 			for (int j = 0; j < n3; j++) 
-				{	CompleteOperationalValueType OP=new CompleteOperationalValueType(new Long(j),"View"+ j+"name","View"+ j+"desc","View"+j+"padre");
+				{	CompleteOperationalValueType OP=new CompleteOperationalValueType(new Long(j),"View"+ j+"name","View"+ j+"def","View"+j+"view");
 					GG.getViews().add(OP);
 				}
 				
+			ArrayList<CompleteElementType> hijos=new ArrayList<CompleteElementType>();	
+			generahijos(hijos,GG,Elements,new Integer(20));
+			GG.setSons(hijos);
 			
 				C.getMetamodelGrammar().add(GG);
 			}
 		
 		return C;
+	}
+
+	private static void generahijos(ArrayList<CompleteElementType> hijos, CompleteGrammar gG,
+			List<CompleteElementType> elements, Integer integer) {
+		int n = (new Random()).nextInt(integer);
+		for (int i = 0; i < n; i++) 
+			{
+			CompleteElementType CET=new CompleteElementType(new Long(i), "Element"+i, gG);
+			hijos.add(CET);
+			elements.add(CET);
+			
+			CET.setBeFilter((new Random()).nextBoolean());
+			CET.setMultivalued((new Random()).nextBoolean());
+			CET.setSelectable((new Random()).nextBoolean());
+			CET.setBrowseable((new Random()).nextBoolean());
+			
+			int n3 = (new Random()).nextInt(10);
+			for (int j = 0; j < n3; j++) 
+				{	
+					CompleteOperationalValueType OP=new CompleteOperationalValueType(new Long(j),"View"+ j+"name","View"+ j+"def","View"+j+"view");
+					CET.getShows().add(OP);
+				}
+			
+			
+			if ((new Random()).nextBoolean())
+			{
+				ArrayList<CompleteElementType> hijos1=new ArrayList<CompleteElementType>();	
+				generahijos(hijos1,gG,elements,new Integer(integer/2));
+				CET.setSons(hijos1);
+			}
+			
+			
+			}
+		
 	}
 
 

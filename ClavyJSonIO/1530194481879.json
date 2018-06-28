@@ -1,0 +1,59 @@
+{
+  "grammars": [
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 0
+        },
+        {
+          "default": "1desc",
+          "view": "1padre",
+          "name": "1name",
+          "id": 0
+        },
+        {
+          "default": "2desc",
+          "view": "2padre",
+          "name": "2name",
+          "id": 0
+        },
+        {
+          "default": "3desc",
+          "view": "3padre",
+          "name": "3name",
+          "id": 0
+        }
+      ],
+      "sons": [],
+      "description": "0desc",
+      "id": 0,
+      "nombre": "0name"
+    },
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 1
+        }
+      ],
+      "sons": [],
+      "description": "1desc",
+      "id": 1,
+      "nombre": "1name"
+    }
+  ],
+  "name": "nombre coleccion",
+  "description": "descripcion",
+  "resources": [
+    {
+      "path": "0path",
+      "id": 0
+    }
+  ],
+  "id": 1
+}

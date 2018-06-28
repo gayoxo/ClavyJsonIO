@@ -1,0 +1,115 @@
+{
+  "grammars": [
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 0
+        },
+        {
+          "default": "1desc",
+          "view": "1padre",
+          "name": "1name",
+          "id": 0
+        },
+        {
+          "default": "2desc",
+          "view": "2padre",
+          "name": "2name",
+          "id": 0
+        }
+      ],
+      "sons": [],
+      "description": "0desc",
+      "id": 0,
+      "nombre": "0name"
+    },
+    {
+      "view": [
+        {
+          "default": "0desc",
+          "view": "0padre",
+          "name": "0name",
+          "id": 1
+        },
+        {
+          "default": "1desc",
+          "view": "1padre",
+          "name": "1name",
+          "id": 1
+        },
+        {
+          "default": "2desc",
+          "view": "2padre",
+          "name": "2name",
+          "id": 1
+        },
+        {
+          "default": "3desc",
+          "view": "3padre",
+          "name": "3name",
+          "id": 1
+        }
+      ],
+      "sons": [],
+      "description": "1desc",
+      "id": 1,
+      "nombre": "1name"
+    }
+  ],
+  "name": "nombre coleccion",
+  "description": "descripcion",
+  "resources": [
+    {
+      "path": "0path",
+      "id": 0
+    },
+    {
+      "path": "1path",
+      "id": 1
+    },
+    {
+      "path": "2path",
+      "id": 2
+    },
+    {
+      "path": "3path",
+      "id": 3
+    },
+    {
+      "path": "4path",
+      "id": 4
+    },
+    {
+      "path": "5path",
+      "id": 5
+    },
+    {
+      "path": "6path",
+      "id": 6
+    },
+    {
+      "path": "7path",
+      "id": 7
+    },
+    {
+      "path": "8path",
+      "id": 8
+    },
+    {
+      "path": "9path",
+      "id": 9
+    },
+    {
+      "path": "10path",
+      "id": 10
+    },
+    {
+      "path": "11path",
+      "id": 11
+    }
+  ],
+  "id": 1
+}
