@@ -4,8 +4,10 @@
 package fdi.ucm.es.exportparser.json;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +25,7 @@ import fdi.ucm.server.modelComplete.ImportExportPair;
 import fdi.ucm.server.modelComplete.CompleteImportRuntimeException;
 import fdi.ucm.server.modelComplete.SaveCollection;
 import fdi.ucm.server.modelComplete.collection.CompleteCollection;
+import fdi.ucm.server.modelComplete.collection.CompleteCollectionAndLog;
 import fdi.ucm.server.modelComplete.collection.CompleteLogAndUpdates;
 import fdi.ucm.server.modelComplete.collection.document.CompleteDocuments;
 import fdi.ucm.server.modelComplete.collection.document.CompleteElement;
@@ -389,7 +392,42 @@ public class SaveCollectionJSON extends SaveCollection {
 	
 	public static void main(String[] args) {
 		SaveCollectionJSON SV=new SaveCollectionJSON();
-		CompleteCollection CC=CreateCollectionBase();
+		
+		CompleteCollection CC;
+		try {
+			String fileName = "chasquitest.clavy";
+			 System.out.println(fileName);
+			 CompleteCollectionAndLog Salida=new CompleteCollectionAndLog();
+			 
+			 ArrayList<String> log = new ArrayList<>();
+			 
+			 Salida.setLogLines(log);
+
+			 File file = new File(fileName);
+			 FileInputStream fis = new FileInputStream(file);
+			 ObjectInputStream ois = new ObjectInputStream(fis);
+			 CC = (CompleteCollection) ois.readObject();
+			 
+			 try {
+				 ois.close();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+			 try {
+				 fis.close();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			 
+			 
+		} catch (Exception e) {
+			e.printStackTrace();
+			CC=CreateCollectionBase();
+		}
+		
+		 
+		
 		SV.processCollecccion(CC, "");
 		System.out.println(SV.getSalida());
 
