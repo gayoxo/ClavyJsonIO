@@ -160,7 +160,7 @@ public class SaveCollectionJSON extends SaveCollection {
 			
 			JSONArray views=new JSONArray();
 			elemnTj.put(JSONNAMES.ELEMENT_VIEW, views);
-			for (int j = 0; j < elev.getShows().size(); i++) {
+			for (int j = 0; j < elev.getShows().size(); j++) {
 				CompleteOperationalValue GOv = elev.getShows().get(j);
 				JSONObject Operational=new JSONObject();
 				Operational.put(JSONNAMES.VIEW_VALUE_ID, GOv.getClavilenoid());
